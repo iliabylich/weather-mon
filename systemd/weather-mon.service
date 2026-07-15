@@ -1,0 +1,8 @@
+[Unit]
+Description=NM monitor service
+Requires=weather-mon.socket
+After=weather-mon.socket
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/weather-mon --systemd

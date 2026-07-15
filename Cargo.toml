@@ -1,0 +1,25 @@
+[package]
+name = "weather-mon"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0"
+env_logger = { version = "0.11", default-features = false, features = [
+    "auto-color",
+] }
+log = "0.4"
+tokio = { version = "1.52.3", features = ["full"] }
+sd-listen-fds = "0.2"
+futures = { version = "0.3" }
+tokio-util = { version = "0.7", features = ["codec"] }
+tokio-stream = "0.1"
+rustix = { version = "1.1", features = ["net", "fs"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.13", features = ["json", "query"] }
+iana-time-zone = "0.1"
+chrono = { version = "0.4.45", features = ["clock"] }
+
+[dev-dependencies]
+rand = "0.10"
