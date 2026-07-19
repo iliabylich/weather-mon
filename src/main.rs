@@ -58,18 +58,14 @@ async fn main() -> Result<()> {
             Ok((id, client)) = server.accept() => {
                 log::trace!("new client: {id}");
                 clients.insert(id, client);
+                if let Some(weather) = wclient.current() {
+                    clients.send(id, &weather.serialize()).await;
+                }
             }
 
             _ = timer.tick() => {
                 if let Some(weather) = wclient.refresh().await {
                     clients.broadcast(&weather.serialize()).await;
-                }
-            }
-
-            Some(id) = clients.recv() => {
-                log::trace!("received a request from client {id}");
-                if let Some(weather) = wclient.current() {
-                    clients.send(id, &weather.serialize()).await;
                 }
             }
         }

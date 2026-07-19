@@ -1,4 +1,3 @@
-use futures::StreamExt;
 use std::collections::HashMap;
 use tokio::{
     io::AsyncWriteExt,
@@ -28,25 +27,6 @@ impl Clients {
         let client = StreamNotifyClose::new(FramedRead::new(reader, BytesCodec::new()));
         self.readers.insert(id, client);
         self.writers.insert(id, writer);
-    }
-
-    pub(crate) async fn recv(&mut self) -> Option<u64> {
-        loop {
-            let (id, event) = self.readers.next().await?;
-
-            match event {
-                Some(Ok(bytes)) if !bytes.is_empty() => return Some(id),
-                Some(Ok(_)) => {}
-                Some(Err(err)) => {
-                    log::error!("client {id} failed to read: {err:?}");
-                    self.writers.remove(&id);
-                }
-                None => {
-                    log::trace!("client {id} disconnected");
-                    self.writers.remove(&id);
-                }
-            }
-        }
     }
 
     pub(crate) async fn send(&mut self, id: u64, buf: &[u8]) {
