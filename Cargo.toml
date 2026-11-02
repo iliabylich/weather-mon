@@ -19,7 +19,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 reqwest = { version = "0.13", features = ["json", "query"] }
 iana-time-zone = "0.1"
-chrono = { version = "0.4.45", features = ["clock"] }
+chrono = { version = "0.4", features = ["clock"] }
 
 [dev-dependencies]
 rand = "0.10"
