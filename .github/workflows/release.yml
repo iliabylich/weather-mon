@@ -1,0 +1,45 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: release version in MAJOR.MINOR.PATCH version, no "v" prefix
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - run: |
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "version must be MAJOR.MINOR.PATCH, got: $VERSION"
+            exit 1
+          fi
+          if git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" > /dev/null; then
+            echo "tag v$VERSION already exists"
+            exit 1
+          fi
+
+      - uses: jdx/mise-action@v5
+      - run: mise run release
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "target/release/weather-mon,systemd/weather-mon.service,systemd/weather-mon.socket"
+          tag: v${{ inputs.version }}

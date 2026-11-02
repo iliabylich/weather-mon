@@ -1,3 +1,18 @@
+monorepo_root = true
+
+[monorepo]
+config_roots = [".github"]
+
+[tools]
+cargo-binstall = "latest"
+
+[settings]
+cargo.binstall_quickinstall = true
+cargo.binstall_only = true
+
+[task_config]
+shell = "bash -euo pipefail -c"
+
 [tasks.connect]
 usage = 'arg "[path]" default="weather-mon-dev.sock"'
 run = 'cargo run --example cli -- {{usage.path}}'
@@ -9,3 +24,17 @@ run = 'cargo build'
 depends = ['build']
 usage = 'arg "[log_level]" default="trace"'
 run = 'RUST_LOG={{usage.log_level}} ./target/debug/weather-mon --dev'
+
+[tasks.release]
+run = 'cargo build --release'
+
+[tasks."cargo:outdated"]
+hide = true
+tools = { "cargo:cargo-outdated" = "latest" }
+run = "cargo outdated"
+
+[tasks.outdated]
+run = [
+    { task = "cargo:outdated" },
+    { task = "//.github:outdated" },
+]
