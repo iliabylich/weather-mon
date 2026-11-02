@@ -1,0 +1,11 @@
+[tasks.connect]
+usage = 'arg "<path>"'
+run = 'cargo run --example cli -- {{usage.path}}'
+
+[tasks.build]
+run = 'cargo build'
+
+[tasks.dev]
+depends = ['build']
+usage = 'arg "[log_level]" default="trace"'
+run = 'RUST_LOG={{usage.log_level}} ./target/debug/weather-mon --dev'
