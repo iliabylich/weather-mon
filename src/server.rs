@@ -30,11 +30,9 @@ impl Server {
             }
 
             RunMode::Dev => {
-                let xdg_runtime_dir =
-                    std::env::var("XDG_RUNTIME_DIR").context("no $XDG_RUNTIME_DIR")?;
-                let path = format!("{xdg_runtime_dir}/weather-mon-dev.sock");
+                let path = "weather-mon-dev.sock";
                 log::trace!("Listening on {path}");
-                socket_at(&path)?
+                socket_at(path)?
             }
         };
         set_nonblocking(&fd)?;

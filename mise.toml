@@ -1,5 +1,5 @@
 [tasks.connect]
-usage = 'arg "<path>"'
+usage = 'arg "[path]" default="weather-mon-dev.sock"'
 run = 'cargo run --example cli -- {{usage.path}}'
 
 [tasks.build]
