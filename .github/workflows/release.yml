@@ -30,10 +30,17 @@ jobs:
         with:
           version: ${{ inputs.version }}
 
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-musl
+
+      - run: sudo apt update
+      - run: sudo apt install musl-tools
+
       - uses: jdx/mise-action@v5
       - run: mise run release
 
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "target/release/weather-mon,systemd/weather-mon.service,systemd/weather-mon.socket"
+          artifacts: "target/x86_64-unknown-linux-musl/release/weather-mon,systemd/weather-mon.service,systemd/weather-mon.socket"
           tag: v${{ inputs.version }}
